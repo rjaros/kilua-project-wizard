@@ -1,0 +1,105 @@
+package ${PACKAGE_NAME}
+
+import dev.kilua.Application
+import dev.kilua.CoreModule
+#foreach( ${initializer} in ${selected_initializers} )
+import dev.kilua.${initializer}
+#end
+import dev.kilua.Hot
+import dev.kilua.html.div
+#if ( ${i18n_included} )
+import dev.kilua.i18n.I18n
+#end
+import dev.kilua.compose.root
+#if ( ${rpc_enabled} )
+import dev.kilua.rpc.getService
+#end
+#if ( ${ssr_enabled} )
+import dev.kilua.ssr.SimpleSsrRouter
+#end
+import dev.kilua.startApplication
+#if ( ${i18n_included} )
+import js.core.JsAny
+import js.import.JsModule
+#end
+#if ( ${rpc_enabled} )
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+
+val AppScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+#end
+
+#if ( ${i18n_included} )
+@JsModule("/kotlin/modules/i18n/messages-en.po")
+external object messagesEn: JsAny
+
+@JsModule("/kotlin/modules/i18n/messages-pl.po")
+external object messagesPl: JsAny
+
+val i18n = I18n(
+    "en" to messagesEn,
+    "pl" to messagesPl
+)
+
+#end
+class App : Application() {
+    override fun start() {
+        root("root") {
+#if ( ${ssr_enabled})
+            SimpleSsrRouter {
+                div {
+                    route("/") {
+                        div {
+#if ( ${i18n_included} )
+                            +i18n.tr("This is a localized message.")
+#else
+                            +"Hello world"
+#end
+                        }
+                    }
+                }
+            }
+#else
+            div {
+#if ( ${i18n_included} )
+                +i18n.tr("This is a localized message.")
+#else
+                +"Hello world"
+#end
+            }
+#end
+        }
+#if ( ${rpc_enabled} )
+        val pingService = getService<IPingService>()
+        AppScope.launch {
+            val pingResult = pingService.ping("Hello world from client!")
+            println(pingResult)
+        }
+#end
+    }
+}
+
+fun main() {
+    startApplication(
+        ::App,
+        webpackHot(),
+#foreach( ${initializer} in ${selected_initializers} )
+        ${initializer},
+#end
+        CoreModule
+    )
+}
+
+#if ( ${kjs_enabled} && ${kwasm_enabled} )
+expect fun webpackHot(): Hot?
+#elseif ( ${kjs_enabled} )
+fun webpackHot(): Hot? {
+    return js("import.meta.webpackHot").unsafeCast<Hot?>()
+}
+#else
+fun webpackHot(): Hot? {
+    return null
+}
+#end

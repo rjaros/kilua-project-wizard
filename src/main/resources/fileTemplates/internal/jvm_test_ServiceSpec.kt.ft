@@ -1,0 +1,13 @@
+package ${PACKAGE_NAME}
+
+import kotlin.test.Test
+import kotlin.test.assertTrue
+
+class ServiceSpec {
+
+    @Test
+    fun dummy() {
+        assertTrue(true, "Dummy test")
+    }
+
+}

@@ -1,0 +1,80 @@
+[versions]
+kilua = "${kilua_version}"
+kotlin = "${kotlin_version}"
+compose = "${compose_version}"
+#if ( ${rpc_plugin_enabled} )
+kilua-rpc = "${kilua_rpc_version}"
+#end
+#if ( ${rpc_enabled} )
+ksp = "${ksp_version}"
+kotlinx-datetime = "${datetime_version}"
+#end
+#if ( ${jvm_enabled} )
+#if ( ${type} == "jooby" )
+jooby = "${jooby_version}"
+#elseif ( ${type} == "ktor" || (${type} == "front" && ${ssr_enabled}) )
+ktor = "${ktor_version}"
+#elseif ( ${type} == "micronaut" )
+micronaut = "${micronaut_version}"
+micronaut-plugins = "${micronaut_plugins_version}"
+#end
+logback = "${logback_version}"
+#end
+#if ( ${i18n_included} )
+gettext = "${gettext_version}"
+#end
+
+[libraries]
+kilua = { module = "dev.kilua:kilua", version.ref = "kilua" }
+#if ( ${rpc_enabled} )
+kilua-common-types = { module = "dev.kilua:kilua-common-types", version.ref = "kilua" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kilua-rpc = { module = "dev.kilua:kilua-rpc-${type}", version.ref = "kilua-rpc" }
+#end
+#if ( ${ssr_enabled} )
+kilua-ssr = { module = "dev.kilua:kilua-ssr", version.ref = "kilua" }
+#if ( ${type} == "front" )
+kilua-ssr-server = { module = "dev.kilua:kilua-ssr-server-ktor", version.ref = "kilua" }
+#else
+kilua-ssr-server = { module = "dev.kilua:kilua-ssr-server-${type}", version.ref = "kilua" }
+#end
+#end
+#if ( ${jvm_enabled} )
+#if ( ${type} == "jooby" )
+jooby-kotlin = { module = "io.jooby:jooby-kotlin", version.ref = "jooby" }
+jooby-netty = { module = "io.jooby:jooby-netty", version.ref = "jooby" }
+#elseif ( ${type} == "ktor" || (${type} == "front" && ${ssr_enabled}) )
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-compression = { module = "io.ktor:ktor-server-compression", version.ref = "ktor" }
+#elseif ( ${type} == "micronaut" )
+micronaut-platform = { module = "io.micronaut.platform:micronaut-platform", version.ref = "micronaut" }
+#end
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+#end
+#foreach( ${module} in ${selected_modules} )
+${module} = { module = "dev.kilua:${module}", version.ref = "kilua" }
+#end
+#if ( ${test_enabled} )
+kilua-testutils = { module = "dev.kilua:kilua-testutils", version.ref = "kilua" }
+#end
+
+[plugins]
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kilua = { id = "dev.kilua", version.ref = "kilua" }
+#if ( ${rpc_plugin_enabled} )
+kilua-rpc = { id = "dev.kilua.rpc", version.ref = "kilua-rpc" }
+#end
+#if ( ${rpc_enabled} )
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+#end
+#if ( ${type} == "spring-boot" )
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+#elseif ( ${type} == "jooby" )
+jooby = { id = "io.jooby.run", version.ref = "jooby" }
+#end
+#if ( ${i18n_included} )
+gettext = { id = "name.kropp.kotlinx-gettext", version.ref = "gettext" }
+#end

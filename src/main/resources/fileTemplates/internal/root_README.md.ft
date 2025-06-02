@@ -1,0 +1,50 @@
+# Building and running
+
+To build the application, you need to have JDK 21 or later installed.
+
+The following tasks are available:
+
+#if ( ${kjs_enabled} )
+- `./gradlew -t jsBrowserDevelopmentRun` - run the webpack dev server in continuous build mode for JS target on `http://localhost:3000`
+#end
+#if ( ${kwasm_enabled} )
+- `./gradlew -t wasmJsBrowserDevelopmentRun` - run the webpack dev server in continuous build mode for Wasm target on `http://localhost:3000`
+#end
+#if ( ${jvm_enabled} )
+- `./gradlew -t jvmRun` - run the JVM dev server on `http://localhost:8080`
+#end
+#if ( ${kjs_enabled} )
+- `./gradlew jsBrowserDistribution` - build production application for JS target to `build/dist/js/productionExecutable` directory
+#end
+#if ( ${kwasm_enabled} )
+- `./gradlew wasmJsBrowserDistribution` - build production application for Wasm target to `build/dist/wasmJs/productionExecutable` directory
+#end
+#if ( ${rpc_plugin_enabled} )
+- `./gradlew jarWithJs` - build full application with JS frontend to `build/libs` directory
+- `./gradlew jarWithWasmJs` - build full application with Wasm frontend to `build/libs` directory
+#end
+#if ( ${ssr_enabled} )
+#if ( ${kjs_enabled} )
+- `./gradlew exportWithJs` - export pre-rendered static website with JS frontend to `build/site` directory
+#end
+#if ( ${kwasm_enabled} )
+- `./gradlew exportWithWasmJs` - export pre-rendered static website with Wasm frontend to `build/site` directory
+#end
+#end
+#if ( ${i18n_included} )
+- `./gradlew gettext` - generate a `src/${src_frontend_dir_prefix}Main/resources/modules/i18n/messages.pot` translation template file
+#end
+
+#if ( ${type} == "javalin" )
+Note: Auto reload is not supported for the JVM backend with Javalin.
+#elseif ( ${type} == "jooby" )
+Note: Auto reload is automatically supported for the JVM backend with Jooby.
+#elseif ( ${type} == "ktor" || (${type} == "front" && ${ssr_enabled}) )
+Note: For auto reload with Ktor JVM backend you need to run  `./gradlew -t compileKotlinJvm` in a separate Gradle process.
+#elseif ( ${type} == "spring-boot" )
+Note: For auto reload with Spring Boot JVM backend you need to run  `./gradlew -t compileKotlinJvm` in a separate Gradle process.
+#elseif ( ${type} == "vertx" )
+Note: Auto reload is automatically supported for the JVM backend with Vert.x.
+#end
+
+Note: use `gradlew.bat` instead of `./gradlew` on Windows operating system.

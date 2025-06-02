@@ -1,0 +1,7 @@
+#  ssr.nodeExecutable=node
+#  ssr.port=7788
+#  ssr.externalSsrService=http://localhost:7788
+#  ssr.rpcUrlPrefix=http://localhost:8080
+#  ssr.rootId=root
+#  ssr.contextPath=/
+#  ssr.cacheTime=10

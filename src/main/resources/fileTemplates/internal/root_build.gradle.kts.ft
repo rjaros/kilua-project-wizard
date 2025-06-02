@@ -1,0 +1,334 @@
+#if ( ${jvm_enabled} && ( ${type} != "spring-boot" ) )
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+#end
+#if ( ${kwasm_enabled} )
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+#end
+#if ( ${jvm_enabled} )
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+#end
+
+plugins {
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlinx.serialization)
+#if ( ${type} == "spring-boot" )
+    alias(libs.plugins.kotlin.spring)
+#elseif ( ${type} == "jooby" )
+    alias(libs.plugins.jooby)
+#end
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
+#if ( ${rpc_enabled} )
+    alias(libs.plugins.ksp)
+#end
+#if ( ${rpc_plugin_enabled} )
+    alias(libs.plugins.kilua.rpc)
+#end
+    alias(libs.plugins.kilua)
+#if ( ${i18n_included} )
+    alias(libs.plugins.gettext)
+#end
+}
+
+#if ( ${jvm_enabled} )
+#if ( ${type} == "javalin" || ${type} == "jooby" || ${type} == "spring-boot" || ${type} == "micronaut" )
+extra["mainClassName"] = "${PACKAGE_NAME}.MainKt"
+#elseif ( ${type} == "vertx" )
+extra["mainClassName"] = "${PACKAGE_NAME}.MainVerticle"
+#elseif ( ${type} == "ktor" || (${type} == "front" && ${ssr_enabled}) )
+extra["mainClassName"] = "io.ktor.server.netty.EngineMain"
+#end
+#end
+
+#if ( ${kwasm_enabled} )
+@OptIn(ExperimentalWasmDsl::class)
+#end
+kotlin {
+#if ( ${jvm_enabled} )
+    jvmToolchain(21)
+    jvm {
+        compilerOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+        }
+#if ( ${type} == "javalin" || ${type} == "jooby" || ${type} == "ktor" || (${type} == "front" && ${ssr_enabled}))
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        mainRun {
+            mainClass.set(project.extra["mainClassName"]!!.toString())
+        }
+#elseif ( ${type} == "vertx" )
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        mainRun {
+            mainClass.set("io.vertx.launcher.application.VertxApplication")
+            args(project.extra["mainClassName"]!!)
+        }
+#end
+    }
+#end
+#if ( ${kjs_enabled} )
+    js(IR) {
+        useEsModules()
+        browser {
+            commonWebpackConfig {
+                outputFileName = "main.bundle.js"
+                sourceMaps = false
+            }
+#if ( ${test_enabled} )
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                }
+            }
+#end
+        }
+        binaries.executable()
+        compilerOptions {
+            target.set("es2015")
+        }
+    }
+#end
+#if ( ${kwasm_enabled} )
+    wasmJs {
+        useEsModules()
+        browser {
+            commonWebpackConfig {
+                outputFileName = "main.bundle.js"
+                sourceMaps = false
+            }
+#if ( ${test_enabled} )
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                }
+            }
+#end
+        }
+        binaries.executable()
+        compilerOptions {
+            target.set("es2015")
+        }
+    }
+#end
+    sourceSets {
+#if ( ${jvm_enabled} )
+        val commonMain by getting {
+            dependencies {
+#if ( ${rpc_enabled} )
+                implementation(libs.kilua.rpc)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.kilua.common.types)
+#end
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+#if ( ${ssr_enabled} )
+                implementation(libs.kilua.ssr.server)
+#end
+#if ( ${type} == "jooby" )
+                implementation(libs.jooby.kotlin)
+                implementation(libs.jooby.netty)
+#elseif ( ${type} == "ktor" || (${type} == "front" && ${ssr_enabled}) )
+                implementation(libs.ktor.server.netty)
+                implementation(libs.ktor.server.compression)
+#elseif ( ${type} == "spring-boot" )
+                implementation(kotlin("reflect"))
+                implementation(project.dependencies.platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
+                implementation("org.springframework.boot:spring-boot-starter")
+                implementation("org.springframework.boot:spring-boot-starter-webflux")
+                implementation("org.springframework.boot:spring-boot-starter-security")
+#end
+                implementation(libs.logback.classic)
+            }
+        }
+#if ( ${test_enabled} )
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit"))
+            }
+        }
+#end
+#if ( ${kjs_enabled} && ${kwasm_enabled} )
+        val webMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                implementation(libs.kilua)
+#foreach( ${module} in ${selected_modules_dependencies} )
+                implementation(libs.${module})
+#end
+#if ( ${ssr_enabled} )
+                implementation(libs.kilua.ssr)
+#end
+            }
+        }
+        val jsMain by getting {
+            dependsOn(webMain)
+        }
+        val wasmJsMain by getting {
+            dependsOn(webMain)
+        }
+#if ( ${test_enabled} )
+        val webTest by creating {
+            dependsOn(commonTest)
+            dependencies {
+                implementation(libs.kilua.testutils)
+            }
+        }
+        val jsTest by getting {
+            dependsOn(webTest)
+        }
+        val wasmJsTest by getting {
+            dependsOn(webTest)
+        }
+#end
+#elseif ( ${kjs_enabled} )
+        val jsMain by getting {
+            dependencies {
+                implementation(libs.kilua)
+#foreach( ${module} in ${selected_modules_dependencies} )
+                implementation(libs.${module})
+#end
+#if ( ${ssr_enabled} )
+                implementation(libs.kilua.ssr)
+#end
+            }
+        }
+#if ( ${test_enabled} )
+        val jsTest by getting {
+            dependencies {
+                implementation(libs.kilua.testutils)
+            }
+        }
+#end
+#elseif ( ${kwasm_enabled} )
+        val wasmJsMain by getting {
+            dependencies {
+                implementation(libs.kilua)
+#foreach( ${module} in ${selected_modules_dependencies} )
+                implementation(libs.${module})
+#end
+#if ( ${ssr_enabled} )
+                implementation(libs.kilua.ssr)
+#end
+            }
+        }
+#if ( ${test_enabled} )
+        val wasmJsTest by getting {
+            dependencies {
+                implementation(libs.kilua.testutils)
+            }
+        }
+#end
+#end
+#else
+#if ( ${kjs_enabled} && ${kwasm_enabled} )
+        val commonMain by getting {
+            dependencies {
+                implementation(libs.kilua)
+#foreach( ${module} in ${selected_modules_dependencies} )
+                implementation(libs.${module})
+#end
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+            }
+        }
+        val wasmJsMain by getting {
+            dependencies {
+            }
+        }
+#if ( ${test_enabled} )
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+                implementation(libs.kilua.testutils)
+            }
+        }
+        val jsTest by getting {
+            dependencies {
+            }
+        }
+        val wasmJsTest by getting {
+            dependencies {
+            }
+        }
+#end
+#elseif ( ${kjs_enabled} )
+        val jsMain by getting {
+            dependencies {
+                implementation(libs.kilua)
+#foreach( ${module} in ${selected_modules_dependencies} )
+                implementation(libs.${module})
+#end
+            }
+        }
+#if ( ${test_enabled} )
+        val jsTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+                implementation(libs.kilua.testutils)
+            }
+        }
+#end
+#elseif ( ${kwasm_enabled} )
+        val wasmJsMain by getting {
+            dependencies {
+                implementation(libs.kilua)
+#foreach( ${module} in ${selected_modules_dependencies} )
+                implementation(libs.${module})
+#end
+            }
+        }
+#if ( ${test_enabled} )
+        val wasmJsTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+                implementation(libs.kilua.testutils)
+            }
+        }
+#end
+#end
+#end
+    }
+}
+
+#if ( ${jvm_enabled} )
+composeCompiler {
+    targetKotlinPlatforms.set(
+        KotlinPlatformType.values()
+            .filterNot { it == KotlinPlatformType.jvm }
+            .asIterable()
+    )
+}
+#if ( ${type} == "jooby" )
+tasks {
+    joobyRun {
+        mainClass = project.extra["mainClassName"]!!.toString()
+        restartExtensions = listOf("conf", "properties", "class")
+        compileExtensions = listOf("java", "kt")
+        port = 8080
+    }
+}
+#end
+#end
+
+#if ( ${i18n_included} )
+gettext {
+    potFile.set(File(projectDir, "src/${src_frontend_dir_prefix}Main/resources/modules/i18n/messages.pot"))
+    keywords.set(listOf("tr","trn:1,2","trc:2","trnc:2,3","marktr"))
+}
+#end

@@ -1,0 +1,22 @@
+@file:Suppress("UnstableApiUsage")
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        google()
+        mavenLocal()
+    }
+}
+
+rootProject.name = "${ARTIFACT_ID}"
+#if ( ${type} == "spring-boot" )
+include(":application")
+#end

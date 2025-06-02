@@ -1,0 +1,7 @@
+package ${PACKAGE_NAME}
+
+import dev.kilua.Hot
+
+actual fun webpackHot(): Hot? {
+    return null
+}

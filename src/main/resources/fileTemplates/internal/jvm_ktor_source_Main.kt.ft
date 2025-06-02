@@ -1,0 +1,31 @@
+package ${PACKAGE_NAME}
+
+import dev.kilua.rpc.applyRoutes
+import dev.kilua.rpc.getAllServiceManagers
+import dev.kilua.rpc.initRpc
+import dev.kilua.rpc.registerService
+#if ( ${ssr_enabled} )
+import dev.kilua.ssr.initSsr
+#end
+import io.ktor.server.application.*
+import io.ktor.server.plugins.compression.*
+import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
+
+fun Application.main() {
+    install(Compression)
+    install(WebSockets)
+    routing {
+        getAllServiceManagers().forEach { applyRoutes(it) }
+    }
+#if ( ${ssr_enabled} )
+    initRpc(initStaticResources = false) {
+#else
+    initRpc {
+#end
+        registerService<IPingService> { PingService() }
+    }
+#if ( ${ssr_enabled} )
+    initSsr()
+#end
+}
