@@ -69,28 +69,6 @@ private fun getBinaryData(templateName: String): ByteArray {
         }
 }
 
-fun Project.runGradle(command: String) {
-    GradleExecuteTaskAction.runGradle(this, DefaultRunExecutor.getRunExecutorInstance(), this.basePath!!, command)
-}
-
-fun Project.getRootFile(): VirtualFile? {
-    return projectFile?.parent?.parent
-}
-
-fun String.insertAfter(after: Regex, insert: String): String {
-    val last = after.find(this)?.range?.last
-    return if (last != null) {
-        buildString {
-            append(this.substring(0, last + 1))
-            appendLine(insert)
-            appendLine(this.substring(last + 1))
-        }
-    } else {
-        this
-    }
-
-}
-
 object TemplateAttributes {
     const val GROUP_ID = "GROUP_ID"
     const val ARTIFACT_ID = "ARTIFACT_ID"
