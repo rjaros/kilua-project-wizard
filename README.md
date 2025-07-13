@@ -9,6 +9,7 @@ Supported project types:
 * Fullstack project with Spring Boot
 * Fullstack project with Javalin
 * Fullstack project with Jooby
+* Fullstack project with Micronaut
 * Fullstack project with Vert.x
 
 Supported options:

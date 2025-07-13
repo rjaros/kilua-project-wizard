@@ -15,7 +15,7 @@ import dev.kilua.compose.root
 import dev.kilua.rpc.getService
 #end
 #if ( ${ssr_enabled} )
-import dev.kilua.ssr.SimpleSsrRouter
+import dev.kilua.ssr.ssrRouter
 #end
 import dev.kilua.startApplication
 #if ( ${i18n_included} )
@@ -48,9 +48,9 @@ class App : Application() {
     override fun start() {
         root("root") {
 #if ( ${ssr_enabled})
-            SimpleSsrRouter {
-                div {
-                    route("/") {
+            ssrRouter {
+                route("/") {
+                    view {
                         div {
 #if ( ${i18n_included} )
                             +i18n.tr("This is a localized message.")

@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+#elseif ( ${type} == "micronaut" )
+import io.micronaut.context.annotation.Prototype
+
+@Prototype
 #end
 class PingService : IPingService {
 

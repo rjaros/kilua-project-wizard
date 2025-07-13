@@ -31,7 +31,6 @@ class ProjectTreeGenerator {
         "css.js",
         "file.js",
         "proxy.js",
-        "temporal.js",
     )
     private val webpackCustomFiles = listOf(
         "webpack.js"
@@ -130,12 +129,12 @@ class ProjectTreeGenerator {
                         )
                     }
                 }
-                if (projectType == KiluaProjectType.SPRING_BOOT) {
+                if (projectType == KiluaProjectType.SPRING_BOOT || projectType == KiluaProjectType.MICRONAUT) {
                     dir("application") {
                         applicationFiles.forEach { fileName ->
                             file(
                                 fileName,
-                                "application_$fileName",
+                                "jvm_${projectType.code}_application_$fileName",
                                 attrs
                             )
                         }
@@ -286,6 +285,10 @@ class ProjectTreeGenerator {
                                             file("Main.kt", "jvm_spring_source_Main.kt", attrs)
                                         }
 
+                                        KiluaProjectType.MICRONAUT -> {
+                                            file("Main.kt", "jvm_micronaut_source_Main.kt", attrs)
+                                        }
+
                                         KiluaProjectType.VERTX -> {
                                             file("Main.kt", "jvm_vertx_source_Main.kt", attrs)
                                         }
@@ -317,6 +320,8 @@ class ProjectTreeGenerator {
                                     file("application.conf", "jvm_ktor_resources_application.conf", attrs)
                                 } else if (projectType == KiluaProjectType.SPRING_BOOT) {
                                     file("application.yml", "jvm_spring_resources_application.yml", attrs)
+                                } else if (projectType == KiluaProjectType.MICRONAUT) {
+                                    file("application.yml", "jvm_micronaut_resources_application.yml", attrs)
                                 } else if (projectType == KiluaProjectType.VERTX) {
                                     if (isSsrEnabled) {
                                         file(

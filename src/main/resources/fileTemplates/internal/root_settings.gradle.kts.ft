@@ -17,6 +17,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "${ARTIFACT_ID}"
-#if ( ${type} == "spring-boot" )
+#if ( (${type} == "spring-boot") || (${type} == "micronaut") )
 include(":application")
 #end

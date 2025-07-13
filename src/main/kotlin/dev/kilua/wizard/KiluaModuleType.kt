@@ -35,7 +35,7 @@ enum class KiluaProjectType(val displayName: String, val code: String) {
     SPRING_BOOT("Fullstack project with Spring Boot", "spring-boot"),
     JAVALIN("Fullstack project with Javalin", "javalin"),
     JOOBY("Fullstack project with Jooby", "jooby"),
-//    MICRONAUT("Fullstack project with Micronaut", "micronaut"),
+    MICRONAUT("Fullstack project with Micronaut", "micronaut"),
     VERTX("Fullstack project with Vert.x", "vertx")
 }
 
@@ -45,6 +45,6 @@ val supportedProjectTypes = arrayOf(
     KiluaProjectType.SPRING_BOOT,
     KiluaProjectType.JAVALIN,
     KiluaProjectType.JOOBY,
-//    KiluaProjectType.MICRONAUT,
+    KiluaProjectType.MICRONAUT,
     KiluaProjectType.VERTX
 )

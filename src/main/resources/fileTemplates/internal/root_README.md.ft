@@ -43,6 +43,8 @@ Note: Auto reload is automatically supported for the JVM backend with Jooby.
 Note: For auto reload with Ktor JVM backend you need to run  `./gradlew -t compileKotlinJvm` in a separate Gradle process.
 #elseif ( ${type} == "spring-boot" )
 Note: For auto reload with Spring Boot JVM backend you need to run  `./gradlew -t compileKotlinJvm` in a separate Gradle process.
+#elseif ( ${type} == "micronaut" )
+Note: Auto reload is not supported for the JVM backend with Micronaut.
 #elseif ( ${type} == "vertx" )
 Note: Auto reload is automatically supported for the JVM backend with Vert.x.
 #end
