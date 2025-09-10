@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <title>Kilua template</title>
     <base href="/">
+#if ( ${vite_kotlin_enabled} )
+    <script type="module">
+        import './${project_name}.mjs';
+        if (import.meta.hot) {
+            import.meta.hot.accept('./${project_name}.mjs');
+        }
+    </script>
+#else
     <script src="main.bundle.js"></script>
+#end
 </head>
 <body>
 <div id="root"></div>

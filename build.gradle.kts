@@ -1,11 +1,11 @@
 plugins {
-    id("org.jetbrains.intellij.platform") version "2.6.0"
-    id("org.jetbrains.kotlin.jvm") version "2.2.0"
+    id("org.jetbrains.intellij.platform") version "2.9.0"
+    id("org.jetbrains.kotlin.jvm") version "2.2.20"
     id("idea")
 }
 
 group = "dev.kilua"
-version = "0.0.2"
+version = "0.0.3"
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ dependencies {
     implementation("io.reactivex.rxjava3:rxjava:3.1.11")
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     intellijPlatform {
-        intellijIdeaCommunity("2025.1.3")
+        intellijIdeaCommunity("2025.2.1")
         bundledPlugin("com.intellij.java")
         bundledPlugin("com.intellij.gradle")
         bundledPlugin("org.jetbrains.kotlin")

@@ -20,7 +20,7 @@ import dev.kilua.ssr.ssrRouter
 import dev.kilua.startApplication
 #if ( ${i18n_included} )
 import js.core.JsAny
-import js.import.JsModule
+import kotlin.js.JsModule
 #end
 #if ( ${rpc_enabled} )
 import kotlinx.coroutines.CoroutineScope
@@ -32,10 +32,10 @@ val AppScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 #end
 
 #if ( ${i18n_included} )
-@JsModule("/kotlin/modules/i18n/messages-en.po")
+@JsModule("./modules/i18n/messages-en.po")
 external object messagesEn: JsAny
 
-@JsModule("/kotlin/modules/i18n/messages-pl.po")
+@JsModule("./modules/i18n/messages-pl.po")
 external object messagesPl: JsAny
 
 val i18n = I18n(
@@ -84,7 +84,7 @@ class App : Application() {
 fun main() {
     startApplication(
         ::App,
-        webpackHot(),
+        bundlerHot(),
 #foreach( ${initializer} in ${selected_initializers} )
         ${initializer},
 #end
@@ -93,13 +93,17 @@ fun main() {
 }
 
 #if ( ${kjs_enabled} && ${kwasm_enabled} )
-expect fun webpackHot(): Hot?
+expect fun bundlerHot(): Hot?
 #elseif ( ${kjs_enabled} )
-fun webpackHot(): Hot? {
+fun bundlerHot(): Hot? {
+#if ( ${vite_kotlin_enabled} )
+    return js("import.meta.hot").unsafeCast<Hot?>()
+#else
     return js("import.meta.webpackHot").unsafeCast<Hot?>()
+#end
 }
 #else
-fun webpackHot(): Hot? {
+fun bundlerHot(): Hot? {
     return null
 }
 #end

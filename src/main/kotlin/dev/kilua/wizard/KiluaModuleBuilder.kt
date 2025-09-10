@@ -1,12 +1,16 @@
 package dev.kilua.wizard
 
+import com.intellij.configurationStore.saveSettings
+import com.intellij.ide.projectWizard.ProjectSettingsStep
 import com.intellij.ide.util.projectWizard.ModuleBuilder
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
+import com.intellij.ide.util.projectWizard.SettingsStep
 import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.roots.ModifiableRootModel
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
@@ -42,9 +46,12 @@ class KiluaModuleBuilder : ModuleBuilder() {
     var kjsEnabled: Boolean = true
     var kwasmEnabled: Boolean = true
     var ssrEnabled: Boolean = true
+    var viteKotlinEnabled: Boolean = false
     var testEnabled: Boolean = true
     var selectedModules: List<String> = listOf("kilua-bootstrap")
     var selectedInitializers: List<String> = listOf("BootstrapModule", "BootstrapCssModule")
+
+    var wizardContext: WizardContext? = null
 
     override fun setupRootModel(modifiableRootModel: ModifiableRootModel) {
         val root = createAndGetRoot() ?: return
@@ -68,21 +75,33 @@ class KiluaModuleBuilder : ModuleBuilder() {
                     root,
                     artifactId,
                     groupId,
+                    wizardContext?.projectName ?: artifactId,
                     selectedModules,
                     selectedInitializers,
                     versionData,
                     kjsEnabled,
                     kwasmEnabled,
                     ssrEnabled,
+                    viteKotlinEnabled,
                     testEnabled
                 )
             } catch (ex: Exception) {
                 ex.printStackTrace()
             }
             if (ssrEnabled || projectType != KiluaProjectType.FRONTEND) {
-                RunConfigurationUtil.createFullstackConfiguration(modifiableRootModel.project, kjsEnabled, kwasmEnabled)
+                RunConfigurationUtil.createFullstackConfiguration(
+                    modifiableRootModel.project,
+                    kjsEnabled,
+                    kwasmEnabled,
+                    viteKotlinEnabled
+                )
             } else {
-                RunConfigurationUtil.createFrontendConfiguration(modifiableRootModel.project, kjsEnabled, kwasmEnabled)
+                RunConfigurationUtil.createFrontendConfiguration(
+                    modifiableRootModel.project,
+                    kjsEnabled,
+                    kwasmEnabled,
+                    viteKotlinEnabled
+                )
             }
             GradleAutoImportAware()
             wizardScope.launch {
@@ -105,24 +124,38 @@ class KiluaModuleBuilder : ModuleBuilder() {
         return LibraryChoiceStep(this, parentDisposable)
     }
 
+    override fun createWizardSteps(
+        wizardContext: WizardContext,
+        modulesProvider: ModulesProvider
+    ): Array<out ModuleWizardStep?>? {
+        this.wizardContext = wizardContext
+        return super.createWizardSteps(wizardContext, modulesProvider)
+    }
+
+    override fun modifySettingsStep(settingsStep: SettingsStep): ModuleWizardStep? {
+        settingsStep.moduleNameLocationSettings?.moduleName = artifactId
+        return super.modifySettingsStep(settingsStep)
+    }
+
     private fun fetchVersionData(): VersionData {
         return try {
             VersionApi.create().getVersionData().blockingGet()
         } catch (_: Exception) {
             VersionData(
-                kilua = "0.0.26",
-                kotlin = "2.2.0",
-                compose = "1.9.0-alpha03",
+                kilua = "0.0.27",
+                kotlin = "2.2.20-RC2",
+                compose = "1.10.0-alpha01",
                 coroutines = "1.10.2",
-                ksp = "2.2.0-2.0.2",
-                kiluaRpc = "0.0.35",
+                ksp = "2.2.20-RC2-2.0.2",
+                kiluaRpc = "0.0.37",
                 logback = "1.5.18",
                 gettext = "0.7.0",
                 datetime = "0.7.1",
-                templateJooby = TemplateJooby("3.10.0"),
-                templateKtor = TemplateKtor(ktor = "3.2.1"),
-                templateMicronaut = TemplateMicronaut(micronaut = "4.9.1", micronautPlugins = "4.5.4"),
-                templateSpring = TemplateSpring(springBoot = "3.5.3"),
+                viteKotlin = "0.6.2",
+                templateJooby = TemplateJooby("4.0.6"),
+                templateKtor = TemplateKtor(ktor = "3.2.3"),
+                templateMicronaut = TemplateMicronaut(micronaut = "4.9.3", micronautPlugins = "4.5.4"),
+                templateSpring = TemplateSpring(springBoot = "3.5.5"),
                 modules = emptyList()
             )
         }

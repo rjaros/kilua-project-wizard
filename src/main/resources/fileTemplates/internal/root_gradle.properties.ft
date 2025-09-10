@@ -5,7 +5,3 @@ org.gradle.configuration-cache=true
 org.gradle.kotlin.dsl.precompiled.accessors.strict=true
 
 kotlin.code.style=official
-kotlin.js.ir.output.granularity=per-file
-#if ( ${jvm_enabled} && ${kjs_enabled} && ${kwasm_enabled} )
-kotlin.mpp.applyDefaultHierarchyTemplate=false
-#end

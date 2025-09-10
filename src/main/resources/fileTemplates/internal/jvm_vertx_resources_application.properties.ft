@@ -5,3 +5,4 @@
 #  ssr.rootId=root
 #  ssr.contextPath=/
 #  ssr.cacheTime=10
+#  ssr.sitemap=true

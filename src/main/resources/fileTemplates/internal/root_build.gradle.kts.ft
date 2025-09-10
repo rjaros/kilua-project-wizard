@@ -30,6 +30,9 @@ plugins {
 #if ( ${i18n_included} )
     alias(libs.plugins.gettext)
 #end
+#if ( ${vite_kotlin_enabled} )
+    alias(libs.plugins.vite.kotlin)
+#end
 }
 
 #if ( ${jvm_enabled} )
@@ -71,6 +74,9 @@ kotlin {
         useEsModules()
         browser {
             commonWebpackConfig {
+                cssSupport {
+                    enabled = true
+                }
                 outputFileName = "main.bundle.js"
                 sourceMaps = false
             }
@@ -93,6 +99,9 @@ kotlin {
         useEsModules()
         browser {
             commonWebpackConfig {
+                cssSupport {
+                    enabled = true
+                }
                 outputFileName = "main.bundle.js"
                 sourceMaps = false
             }
@@ -109,6 +118,9 @@ kotlin {
             target.set("es2015")
         }
     }
+#end
+#if ( ${jvm_enabled} && ${kjs_enabled} && ${kwasm_enabled} )
+    applyDefaultHierarchyTemplate()
 #end
     sourceSets {
 #if ( ${jvm_enabled} )
@@ -171,8 +183,7 @@ kotlin {
         }
 #end
 #if ( ${kjs_enabled} && ${kwasm_enabled} )
-        val webMain by creating {
-            dependsOn(commonMain)
+        val webMain by getting {
             dependencies {
                 implementation(libs.kilua)
 #foreach( ${module} in ${selected_modules_dependencies} )
@@ -183,24 +194,11 @@ kotlin {
 #end
             }
         }
-        val jsMain by getting {
-            dependsOn(webMain)
-        }
-        val wasmJsMain by getting {
-            dependsOn(webMain)
-        }
 #if ( ${test_enabled} )
-        val webTest by creating {
-            dependsOn(commonTest)
+        val webTest by getting {
             dependencies {
                 implementation(libs.kilua.testutils)
             }
-        }
-        val jsTest by getting {
-            dependsOn(webTest)
-        }
-        val wasmJsTest by getting {
-            dependsOn(webTest)
         }
 #end
 #elseif ( ${kjs_enabled} )
@@ -252,14 +250,6 @@ kotlin {
 #end
             }
         }
-        val jsMain by getting {
-            dependencies {
-            }
-        }
-        val wasmJsMain by getting {
-            dependencies {
-            }
-        }
 #if ( ${test_enabled} )
         val commonTest by getting {
             dependencies {
@@ -267,14 +257,6 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation(libs.kilua.testutils)
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-            }
-        }
-        val wasmJsTest by getting {
-            dependencies {
             }
         }
 #end
@@ -350,5 +332,21 @@ dependencies {
 gettext {
     potFile.set(File(projectDir, "src/${src_frontend_dir_prefix}Main/resources/modules/i18n/messages.pot"))
     keywords.set(listOf("tr","trn:1,2","trc:2","trnc:2,3","marktr"))
+}
+#end
+
+#if ( ${vite_kotlin_enabled} )
+vite {
+    build {
+        target = "es2020"
+    }
+    server {
+        port = 3000
+#if ( ${rpc_enabled} )
+        proxy("/rpc", "http://localhost:8080")
+        proxy("/rpcsse", "http://localhost:8080")
+        proxy("/rpcws", "http://localhost:8080", ws = true)
+#end
+    }
 }
 #end

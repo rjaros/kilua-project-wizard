@@ -34,6 +34,7 @@ class LibraryChoiceView(
     var kjsEnabled: Boolean,
     var kwasmEnabled: Boolean,
     var ssrEnabled: Boolean,
+    var viteKotlinEnabled: Boolean,
     var testEnabled: Boolean,
     var selectedModules: List<String>,
     var selectedInitializers: List<String>,
@@ -122,6 +123,7 @@ class LibraryChoiceView(
                 }
             })
             add(JLabel("Options:").apply { alignmentX = LEFT_ALIGNMENT })
+            lateinit var viteKotlinCheck: JCheckBox
             lateinit var kwasmjsCheck: JCheckBox
             val kjsCheck = JCheckBox().apply {
                 text = "Kotlin/JS target"
@@ -132,6 +134,8 @@ class LibraryChoiceView(
                     if (!kjsEnabled) {
                         kwasmjsCheck.isSelected = true
                         kwasmEnabled = true
+                        viteKotlinCheck.isSelected = false
+                        viteKotlinEnabled = false
                     }
                     onChanged()
                 }
@@ -160,6 +164,20 @@ class LibraryChoiceView(
                     onChanged()
                 }
             })
+            viteKotlinCheck = JCheckBox().apply {
+                text = "Use Vite plugin for development (Kotlin/JS only, experimental)"
+                isSelected = viteKotlinEnabled
+                alignmentX = LEFT_ALIGNMENT
+                addActionListener {
+                    viteKotlinEnabled = isSelected
+                    if (viteKotlinEnabled) {
+                        kjsCheck.isSelected = true
+                        kjsEnabled = true
+                    }
+                    onChanged()
+                }
+            }
+            add(viteKotlinCheck)
             add(JCheckBox().apply {
                 text = "Include test sources"
                 isSelected = testEnabled

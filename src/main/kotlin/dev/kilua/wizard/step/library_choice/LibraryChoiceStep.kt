@@ -14,6 +14,7 @@ class LibraryChoiceStep(private val _builder: KiluaModuleBuilder, private val pa
             _builder.kjsEnabled,
             _builder.kwasmEnabled,
             _builder.ssrEnabled,
+            _builder.viteKotlinEnabled,
             _builder.testEnabled,
             _builder.selectedModules,
             _builder.selectedInitializers,
@@ -41,6 +42,7 @@ class LibraryChoiceStep(private val _builder: KiluaModuleBuilder, private val pa
         _builder.kjsEnabled = _view.kjsEnabled
         _builder.kwasmEnabled = _view.kwasmEnabled
         _builder.ssrEnabled = _view.ssrEnabled
+        _builder.viteKotlinEnabled = _view.viteKotlinEnabled
         _builder.testEnabled = _view.testEnabled
         _builder.selectedModules = _view.selectedModules
         _builder.selectedInitializers = _view.selectedInitializers

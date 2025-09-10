@@ -6,4 +6,5 @@ ssr {
 #  rootId = "root"
 #  contextPath = "/"
 #  cacheTime = 10
+#  sitemap = true
 }

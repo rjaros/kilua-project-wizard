@@ -28,7 +28,6 @@ class ProjectTreeGenerator {
 
     private val webpackFiles = listOf(
         "bootstrap.js",
-        "css.js",
         "file.js",
         "proxy.js",
     )
@@ -50,7 +49,7 @@ class ProjectTreeGenerator {
     )
     private val webResourcesTailwindcssFiles = listOf(
         "tailwind.config.js",
-        "tailwind.twcss"
+        "tailwind.css"
     )
     private val webTestFiles = listOf("AppSpec.kt")
 
@@ -59,12 +58,14 @@ class ProjectTreeGenerator {
         root: VirtualFile,
         artifactId: String,
         groupId: String,
+        projectName: String,
         modules: List<String>,
         initializers: List<String>,
         versionData: VersionData,
         isKjsEnabled: Boolean,
         isKwasmEnabled: Boolean,
         isSsrEnabled: Boolean,
+        isViteKotlinEnabled: Boolean,
         isTestEnabled: Boolean,
     ) {
         try {
@@ -97,12 +98,14 @@ class ProjectTreeGenerator {
                 projectType,
                 artifactId,
                 groupId,
+                projectName,
                 modules,
                 initializers,
                 versionData,
                 isKjsEnabled,
                 isKwasmEnabled,
                 isSsrEnabled,
+                isViteKotlinEnabled,
                 isTestEnabled,
                 srcFrontendDirPrefix,
             )
@@ -148,9 +151,6 @@ class ProjectTreeGenerator {
                         binary = (fileName == "gradlew" || fileName == "gradlew.bat"),
                         executable = (fileName == "gradlew")
                     )
-                }
-                if (isSsrEnabled) {
-                    file("kilua.yml", "root_kilua.yml", attrs)
                 }
                 dir("webpack.config.d") {
                     webpackFiles.forEach { fileName -> file(fileName, "webpack_${fileName}", attrs) }
@@ -356,12 +356,14 @@ class ProjectTreeGenerator {
         projectType: KiluaProjectType,
         artifactId: String,
         groupId: String,
+        projectName: String,
         modules: List<String>,
         initializers: List<String>,
         versionData: VersionData,
         isKjsEnabled: Boolean,
         isKwasmEnabled: Boolean,
         isSsrEnabled: Boolean,
+        isViteKotlinEnabled: Boolean,
         isTestEnabled: Boolean,
         srcFrontendDirPrefix: String?
     ): Map<String, Any> {
@@ -369,6 +371,7 @@ class ProjectTreeGenerator {
             TemplateAttributes.ARTIFACT_ID to artifactId,
             TemplateAttributes.GROUP_ID to groupId,
             TemplateAttributes.PACKAGE_NAME to "${groupId}.${artifactId}",
+            "project_name" to projectName,
             "type" to projectType.code,
             "kilua_version" to versionData.kilua,
             "kotlin_version" to versionData.kotlin,
@@ -379,6 +382,7 @@ class ProjectTreeGenerator {
             "logback_version" to versionData.logback,
             "gettext_version" to versionData.gettext,
             "datetime_version" to versionData.datetime,
+            "vite_kotlin_version" to versionData.viteKotlin,
             "jooby_version" to versionData.templateJooby.jooby,
             "ktor_version" to versionData.templateKtor.ktor,
             "micronaut_version" to versionData.templateMicronaut.micronaut,
@@ -391,6 +395,7 @@ class ProjectTreeGenerator {
             "kjs_enabled" to isKjsEnabled,
             "kwasm_enabled" to isKwasmEnabled,
             "ssr_enabled" to isSsrEnabled,
+            "vite_kotlin_enabled" to isViteKotlinEnabled,
             "rpc_enabled" to (projectType != KiluaProjectType.FRONTEND),
             "rpc_plugin_enabled" to (isSsrEnabled || projectType != KiluaProjectType.FRONTEND),
             "jvm_enabled" to (isSsrEnabled || projectType != KiluaProjectType.FRONTEND),

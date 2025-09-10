@@ -3,6 +3,12 @@
     <name>Kilua Project Wizard</name>
     <vendor email="rjaros@treksoft.pl" url="https://kilua.dev">Robert Jaros</vendor>
     <change-notes>
+        &lt;i&gt;Version 0.0.3:&lt;/i&gt;
+        &lt;ul&gt;
+            &lt;li&gt;Upgrade to Kilua 0.0.27&lt;/li&gt;
+            &lt;li&gt;Upgrade to IntelliJ IDEA 2025.2.1&lt;/li&gt;
+            &lt;li&gt;Add OpenSavvy Kotlin-Vite plugin option for JS development&lt;/li&gt;
+        &lt;/ul&gt;
         &lt;i&gt;Version 0.0.2:&lt;/i&gt;
         &lt;ul&gt;
             &lt;li&gt;Upgrade to Kilua 0.0.26&lt;/li&gt;
