@@ -282,7 +282,7 @@ class ProjectTreeGenerator {
                                         }
 
                                         KiluaProjectType.SPRING_BOOT -> {
-                                            file("Main.kt", "jvm_spring_source_Main.kt", attrs)
+                                            file("Main.kt", "jvm_spring-boot_source_Main.kt", attrs)
                                         }
 
                                         KiluaProjectType.MICRONAUT -> {
@@ -319,7 +319,7 @@ class ProjectTreeGenerator {
                                 } else if (projectType == KiluaProjectType.KTOR || projectType == KiluaProjectType.FRONTEND) {
                                     file("application.conf", "jvm_ktor_resources_application.conf", attrs)
                                 } else if (projectType == KiluaProjectType.SPRING_BOOT) {
-                                    file("application.yml", "jvm_spring_resources_application.yml", attrs)
+                                    file("application.yml", "jvm_spring-boot_resources_application.yml", attrs)
                                 } else if (projectType == KiluaProjectType.MICRONAUT) {
                                     file("application.yml", "jvm_micronaut_resources_application.yml", attrs)
                                 } else if (projectType == KiluaProjectType.VERTX) {

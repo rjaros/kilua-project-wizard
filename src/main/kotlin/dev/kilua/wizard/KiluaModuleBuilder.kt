@@ -1,7 +1,5 @@
 package dev.kilua.wizard
 
-import com.intellij.configurationStore.saveSettings
-import com.intellij.ide.projectWizard.ProjectSettingsStep
 import com.intellij.ide.util.projectWizard.ModuleBuilder
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import com.intellij.ide.util.projectWizard.SettingsStep
@@ -142,20 +140,20 @@ class KiluaModuleBuilder : ModuleBuilder() {
             VersionApi.create().getVersionData().blockingGet()
         } catch (_: Exception) {
             VersionData(
-                kilua = "0.0.27",
-                kotlin = "2.2.20-RC2",
-                compose = "1.10.0-alpha01",
+                kilua = "0.0.29",
+                kotlin = "2.3.0-Beta2",
+                compose = "1.10.0-alpha03",
                 coroutines = "1.10.2",
-                ksp = "2.2.20-RC2-2.0.2",
-                kiluaRpc = "0.0.37",
-                logback = "1.5.18",
+                ksp = "2.3.0",
+                kiluaRpc = "0.0.39",
+                logback = "1.5.20",
                 gettext = "0.7.0",
                 datetime = "0.7.1",
-                viteKotlin = "0.6.2",
-                templateJooby = TemplateJooby("4.0.6"),
-                templateKtor = TemplateKtor(ktor = "3.2.3"),
-                templateMicronaut = TemplateMicronaut(micronaut = "4.9.3", micronautPlugins = "4.5.4"),
-                templateSpring = TemplateSpring(springBoot = "3.5.5"),
+                viteKotlin = "0.6.3",
+                templateJooby = TemplateJooby("4.0.10"),
+                templateKtor = TemplateKtor(ktor = "3.3.1"),
+                templateMicronaut = TemplateMicronaut(micronaut = "4.10.0", micronautPlugins = "4.6.0"),
+                templateSpring = TemplateSpring(springBoot = "4.0.0-RC1"),
                 modules = emptyList()
             )
         }

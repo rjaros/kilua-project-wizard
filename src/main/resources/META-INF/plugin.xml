@@ -3,6 +3,11 @@
     <name>Kilua Project Wizard</name>
     <vendor email="rjaros@treksoft.pl" url="https://kilua.dev">Robert Jaros</vendor>
     <change-notes>
+        &lt;i&gt;Version 0.0.4:&lt;/i&gt;
+        &lt;ul&gt;
+            &lt;li&gt;Upgrade to Kilua 0.0.29&lt;/li&gt;
+            &lt;li&gt;Upgrade to IntelliJ IDEA 2025.2.4&lt;/li&gt;
+        &lt;/ul&gt;
         &lt;i&gt;Version 0.0.3:&lt;/i&gt;
         &lt;ul&gt;
             &lt;li&gt;Upgrade to Kilua 0.0.27&lt;/li&gt;

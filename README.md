@@ -18,4 +18,5 @@ Supported options:
 * Kotlin/Wasm target
 * Enable Server-Side Rendering and/or Pre-Rendering
 * Include test sources
+* Use Vite plugin for development (Kotlin/JS only, experimental)
 * Select Kilua modules
