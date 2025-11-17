@@ -19,7 +19,7 @@ import dev.kilua.ssr.ssrRouter
 #end
 import dev.kilua.startApplication
 #if ( ${i18n_included} )
-import js.core.JsAny
+import kotlin.js.JsAny
 import kotlin.js.JsModule
 #end
 #if ( ${rpc_enabled} )
