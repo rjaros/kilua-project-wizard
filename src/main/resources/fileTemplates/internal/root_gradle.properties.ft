@@ -1,7 +1,11 @@
 org.gradle.jvmargs=-Xmx2g
 org.gradle.parallel=true
 org.gradle.caching=true
+#if ( ${ktml_included} )
+org.gradle.configuration-cache=false
+#else
 org.gradle.configuration-cache=true
+#end
 org.gradle.kotlin.dsl.precompiled.accessors.strict=true
 
 kotlin.code.style=official

@@ -44,7 +44,7 @@ class KiluaModuleBuilder : ModuleBuilder() {
     var kjsEnabled: Boolean = true
     var kwasmEnabled: Boolean = true
     var ssrEnabled: Boolean = true
-    var viteKotlinEnabled: Boolean = false
+    var viteKotlinEnabled: Boolean = true
     var testEnabled: Boolean = true
     var selectedModules: List<String> = listOf("kilua-bootstrap")
     var selectedInitializers: List<String> = listOf("BootstrapModule", "BootstrapCssModule")
@@ -140,20 +140,22 @@ class KiluaModuleBuilder : ModuleBuilder() {
             VersionApi.create().getVersionData().blockingGet()
         } catch (_: Exception) {
             VersionData(
-                kilua = "0.0.29",
-                kotlin = "2.3.0-Beta2",
-                compose = "1.10.0-alpha03",
+                kilua = "0.0.31",
+                kotlin = "2.3.0",
+                compose = "1.11.0-alpha01",
                 coroutines = "1.10.2",
-                ksp = "2.3.0",
-                kiluaRpc = "0.0.39",
-                logback = "1.5.20",
+                ksp = "2.3.4",
+                kiluaRpc = "0.0.41",
+                logback = "1.5.23",
                 gettext = "0.7.0",
                 datetime = "0.7.1",
-                viteKotlin = "0.6.3",
-                templateJooby = TemplateJooby("4.0.10"),
-                templateKtor = TemplateKtor(ktor = "3.3.1"),
-                templateMicronaut = TemplateMicronaut(micronaut = "4.10.0", micronautPlugins = "4.6.0"),
-                templateSpring = TemplateSpring(springBoot = "4.0.0-RC1"),
+                tailwindcss = "4.1.18",
+                viteKotlin = "0.7.1",
+                ktml = "0.1.12",
+                templateJooby = TemplateJooby("4.0.13"),
+                templateKtor = TemplateKtor(ktor = "3.3.3"),
+                templateMicronaut = TemplateMicronaut(micronaut = "4.10.6", micronautPlugins = "4.6.1"),
+                templateSpring = TemplateSpring(springBoot = "4.0.1"),
                 modules = emptyList()
             )
         }

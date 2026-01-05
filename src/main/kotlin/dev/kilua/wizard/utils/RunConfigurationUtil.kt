@@ -41,43 +41,25 @@ class RunnerComparator : Comparator<RunnerAndConfigurationSettings> {
 }
 
 object RunConfigurationUtil {
-    fun createFrontendConfiguration(project: Project, kjsEnabled: Boolean, kwasmEnabled: Boolean, viteKotlinEnabled: Boolean) {
+    fun createFrontendConfiguration(
+        project: Project,
+        kjsEnabled: Boolean,
+        kwasmEnabled: Boolean,
+        viteKotlinEnabled: Boolean
+    ) {
         val runManager = RunManagerImpl.getInstanceImpl(project)
-        if (kjsEnabled) {
-            runManager.addConfiguration(
-                RunnerAndConfigurationSettingsImpl(
-                    RunManagerImpl.getInstanceImpl(project),
-                    KiluaConfigurationFactory("jsBrowserDevelopmentRun", "-t").createTemplateConfiguration(project)
-                )
-            )
-            if (viteKotlinEnabled) {
-                runManager.addConfiguration(
-                    RunnerAndConfigurationSettingsImpl(
-                        RunManagerImpl.getInstanceImpl(project),
-                        KiluaConfigurationFactory("viteRun").createTemplateConfiguration(project)
-                    )
-                )
-                runManager.addConfiguration(
-                    RunnerAndConfigurationSettingsImpl(
-                        RunManagerImpl.getInstanceImpl(project),
-                        KiluaConfigurationFactory("viteCompileDev", "-t").createTemplateConfiguration(project)
-                    )
-                )
-            }
-        }
-        if (kwasmEnabled) {
-            runManager.addConfiguration(
-                RunnerAndConfigurationSettingsImpl(
-                    RunManagerImpl.getInstanceImpl(project),
-                    KiluaConfigurationFactory("wasmJsBrowserDevelopmentRun", "-t").createTemplateConfiguration(project)
-                )
-            )
-        }
+        createWebpackConfiguration(kjsEnabled, kwasmEnabled, runManager, project)
+        if (viteKotlinEnabled) createViteKotlinConfiguration(kjsEnabled, kwasmEnabled, runManager, project)
         runManager.setOrder(RunnerComparator())
         runManager.requestSort()
     }
 
-    fun createFullstackConfiguration(project: Project, kjsEnabled: Boolean, kwasmEnabled: Boolean, viteKotlinEnabled: Boolean) {
+    fun createFullstackConfiguration(
+        project: Project,
+        kjsEnabled: Boolean,
+        kwasmEnabled: Boolean,
+        viteKotlinEnabled: Boolean
+    ) {
         val runManager = RunManagerImpl.getInstanceImpl(project)
         runManager.addConfiguration(
             RunnerAndConfigurationSettingsImpl(
@@ -85,6 +67,18 @@ object RunConfigurationUtil {
                 KiluaConfigurationFactory("jvmRun").createTemplateConfiguration(project)
             )
         )
+        createWebpackConfiguration(kjsEnabled, kwasmEnabled, runManager, project)
+        if (viteKotlinEnabled) createViteKotlinConfiguration(kjsEnabled, kwasmEnabled, runManager, project)
+        runManager.setOrder(RunnerComparator())
+        runManager.requestSort()
+    }
+
+    private fun createWebpackConfiguration(
+        kjsEnabled: Boolean,
+        kwasmEnabled: Boolean,
+        runManager: RunManagerImpl,
+        project: Project,
+    ) {
         if (kjsEnabled) {
             runManager.addConfiguration(
                 RunnerAndConfigurationSettingsImpl(
@@ -92,20 +86,6 @@ object RunConfigurationUtil {
                     KiluaConfigurationFactory("jsBrowserDevelopmentRun", "-t").createTemplateConfiguration(project)
                 )
             )
-            if (viteKotlinEnabled) {
-                runManager.addConfiguration(
-                    RunnerAndConfigurationSettingsImpl(
-                        RunManagerImpl.getInstanceImpl(project),
-                        KiluaConfigurationFactory("viteRun").createTemplateConfiguration(project)
-                    )
-                )
-                runManager.addConfiguration(
-                    RunnerAndConfigurationSettingsImpl(
-                        RunManagerImpl.getInstanceImpl(project),
-                        KiluaConfigurationFactory("viteCompileDev", "-t").createTemplateConfiguration(project)
-                    )
-                )
-            }
         }
         if (kwasmEnabled) {
             runManager.addConfiguration(
@@ -115,7 +95,52 @@ object RunConfigurationUtil {
                 )
             )
         }
-        runManager.setOrder(RunnerComparator())
-        runManager.requestSort()
+    }
+
+    private fun createViteKotlinConfiguration(
+        kjsEnabled: Boolean,
+        kwasmEnabled: Boolean,
+        runManager: RunManagerImpl,
+        project: Project
+    ) {
+        if (kjsEnabled && kwasmEnabled) {
+            runManager.addConfiguration(
+                RunnerAndConfigurationSettingsImpl(
+                    RunManagerImpl.getInstanceImpl(project),
+                    KiluaConfigurationFactory("jsViteRun").createTemplateConfiguration(project)
+                )
+            )
+            runManager.addConfiguration(
+                RunnerAndConfigurationSettingsImpl(
+                    RunManagerImpl.getInstanceImpl(project),
+                    KiluaConfigurationFactory("jsViteCompileDev", "-t").createTemplateConfiguration(project)
+                )
+            )
+            runManager.addConfiguration(
+                RunnerAndConfigurationSettingsImpl(
+                    RunManagerImpl.getInstanceImpl(project),
+                    KiluaConfigurationFactory("wasmJsViteRun").createTemplateConfiguration(project)
+                )
+            )
+            runManager.addConfiguration(
+                RunnerAndConfigurationSettingsImpl(
+                    RunManagerImpl.getInstanceImpl(project),
+                    KiluaConfigurationFactory("wasmJsViteCompileDev", "-t").createTemplateConfiguration(project)
+                )
+            )
+        } else {
+            runManager.addConfiguration(
+                RunnerAndConfigurationSettingsImpl(
+                    RunManagerImpl.getInstanceImpl(project),
+                    KiluaConfigurationFactory("viteRun").createTemplateConfiguration(project)
+                )
+            )
+            runManager.addConfiguration(
+                RunnerAndConfigurationSettingsImpl(
+                    RunManagerImpl.getInstanceImpl(project),
+                    KiluaConfigurationFactory("viteCompileDev", "-t").createTemplateConfiguration(project)
+                )
+            )
+        }
     }
 }

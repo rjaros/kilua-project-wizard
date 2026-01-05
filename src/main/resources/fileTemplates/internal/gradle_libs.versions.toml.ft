@@ -25,6 +25,9 @@ logback = "${logback_version}"
 #if ( ${i18n_included} )
 gettext = "${gettext_version}"
 #end
+#if ( ${ktml_included} )
+ktml = "${ktml_version}"
+#end
 #if ( ${vite_kotlin_enabled} )
 vite_kotlin = "${vite_kotlin_version}"
 #end
@@ -86,6 +89,9 @@ micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut-plugins" }
 #end
 #if ( ${i18n_included} )
 gettext = { id = "name.kropp.kotlinx-gettext", version.ref = "gettext" }
+#end
+#if ( ${ktml_included} )
+ktml = { id = "dev.ktml.gradle", version.ref = "ktml" }
 #end
 #if ( ${vite_kotlin_enabled} )
 vite-kotlin = { id = "dev.opensavvy.vite.kotlin", version.ref = "vite-kotlin" }

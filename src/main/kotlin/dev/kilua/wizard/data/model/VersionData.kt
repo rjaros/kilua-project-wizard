@@ -21,8 +21,12 @@ data class VersionData(
     val gettext: String,
     @SerializedName("datetime")
     val datetime: String,
+    @SerializedName("tailwindcss")
+    val tailwindcss: String,
     @SerializedName("vite-kotlin")
     val viteKotlin: String,
+    @SerializedName("ktml")
+    val ktml: String,
     @SerializedName("template-jooby")
     val templateJooby: TemplateJooby,
     @SerializedName("template-ktor")
