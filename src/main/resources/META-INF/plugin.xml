@@ -3,6 +3,10 @@
     <name>Kilua Project Wizard</name>
     <vendor email="rjaros@treksoft.pl" url="https://kilua.dev">Robert Jaros</vendor>
     <change-notes>
+        &lt;i&gt;Version 0.0.6:&lt;/i&gt;
+        &lt;ul&gt;
+            &lt;li&gt;Fix Vite and Tailwindcss configuration&lt;/li&gt;
+        &lt;/ul&gt;
         &lt;i&gt;Version 0.0.5:&lt;/i&gt;
         &lt;ul&gt;
             &lt;li&gt;Upgrade to Kilua 0.0.31&lt;/li&gt;

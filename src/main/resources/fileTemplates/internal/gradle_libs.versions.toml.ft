@@ -29,7 +29,10 @@ gettext = "${gettext_version}"
 ktml = "${ktml_version}"
 #end
 #if ( ${vite_kotlin_enabled} )
-vite_kotlin = "${vite_kotlin_version}"
+vite-kotlin = "${vite_kotlin_version}"
+#if ( ${tailwindcss_included} )
+tailwindcss = "${tailwindcss_version}"
+#end
 #end
 
 [libraries]

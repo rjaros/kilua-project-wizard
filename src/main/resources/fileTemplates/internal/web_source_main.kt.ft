@@ -97,7 +97,7 @@ expect fun bundlerHot(): Hot?
 #elseif ( ${kjs_enabled} )
 fun bundlerHot(): Hot? {
 #if ( ${vite_kotlin_enabled} )
-    return js("import.meta.hot").unsafeCast<Hot?>()
+    return js("import.meta.webpackHot").unsafeCast<Hot?>() ?: js("import.meta.hot").unsafeCast<Hot?>()
 #else
     return js("import.meta.webpackHot").unsafeCast<Hot?>()
 #end

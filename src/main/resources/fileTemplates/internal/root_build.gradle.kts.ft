@@ -340,7 +340,7 @@ gettext {
 vite {
     autoRewriteIndex.set(true)
 #if ( ${tailwindcss_included} )
-    plugin("@tailwindcss/vite", "tailwindcss", "${tailwindcss_version}")
+    plugin("@tailwindcss/vite", "tailwindcss", libs.versions.tailwindcss.get())
 #end
     build {
         target = "es2020"
