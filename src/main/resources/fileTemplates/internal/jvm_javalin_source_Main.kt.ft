@@ -10,17 +10,17 @@ import dev.kilua.ssr.initSsr
 import io.javalin.Javalin
 
 fun main() {
-    Javalin.create().start(8080).apply {
+    Javalin.create { config ->
 #if ( ${ssr_enabled} )
-        initRpc(initStaticResources = false) {
+        config.initRpc(initStaticResources = false) {
 #else
-        initRpc {
+        config.initRpc {
 #end
             registerService<IPingService> { PingService() }
         }
-        getAllServiceManagers().forEach { applyRoutes(it) }
+        getAllServiceManagers().forEach { config.applyRoutes(it) }
 #if ( ${ssr_enabled} )
-        initSsr()
+        config.initSsr()
 #end
-    }
+    }.start(8080)
 }

@@ -140,22 +140,22 @@ class KiluaModuleBuilder : ModuleBuilder() {
             VersionApi.create().getVersionData().blockingGet()
         } catch (_: Exception) {
             VersionData(
-                kilua = "0.0.31",
-                kotlin = "2.3.0",
-                compose = "1.11.0-alpha01",
+                kilua = "0.0.34",
+                kotlin = "2.3.20",
+                compose = "1.11.0-beta01",
                 coroutines = "1.10.2",
-                ksp = "2.3.4",
-                kiluaRpc = "0.0.41",
-                logback = "1.5.23",
+                ksp = "2.3.6",
+                kiluaRpc = "0.0.44",
+                logback = "1.5.32",
                 gettext = "0.7.0",
                 datetime = "0.7.1",
-                tailwindcss = "4.1.18",
-                viteKotlin = "0.7.1",
-                ktml = "0.1.12",
-                templateJooby = TemplateJooby("4.0.13"),
-                templateKtor = TemplateKtor(ktor = "3.3.3"),
-                templateMicronaut = TemplateMicronaut(micronaut = "4.10.6", micronautPlugins = "4.6.1"),
-                templateSpring = TemplateSpring(springBoot = "4.0.1"),
+                tailwindcss = "4.2.2",
+                viteKotlin = "0.8.3",
+                ktml = "0.2.3",
+                templateJooby = TemplateJooby("4.2.0"),
+                templateKtor = TemplateKtor(ktor = "3.4.2"),
+                templateMicronaut = TemplateMicronaut(micronaut = "4.10.11", micronautPlugins = "4.6.2"),
+                templateSpring = TemplateSpring(springBoot = "4.0.5"),
                 modules = emptyList()
             )
         }
