@@ -8,3 +8,14 @@ micronaut:
         mapping: "/**"
         paths:
           - classpath:public
+
+#if ( ${ssr_enabled} )
+ssr:
+#  nodeExecutable: "node"
+#  port: 7788
+#  externalSsrService: "http://localhost:7788"
+  rpcUrlPrefix: "http://localhost:8080"
+#  rootId: "root"
+#  contextPath: "/"
+#  cacheTime: 10
+#end
