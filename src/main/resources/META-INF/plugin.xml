@@ -3,6 +3,11 @@
     <name>Kilua Project Wizard</name>
     <vendor email="rjaros@treksoft.pl" url="https://kilua.dev">Robert Jaros</vendor>
     <change-notes>
+        &lt;i&gt;Version 0.0.9:&lt;/i&gt;
+        &lt;ul&gt;
+            &lt;li&gt;Workaround conflicts with other plugins (in particular KVision Project Wizard)&lt;/li&gt;
+            &lt;li&gt;Upgrade to IntelliJ IDEA 2026.1.4&lt;/li&gt;
+        &lt;/ul&gt;
         &lt;i&gt;Version 0.0.8:&lt;/i&gt;
         &lt;ul&gt;
             &lt;li&gt;Upgrade to Kilua 0.0.35&lt;/li&gt;

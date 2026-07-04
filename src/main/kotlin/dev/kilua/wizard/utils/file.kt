@@ -1,10 +1,7 @@
 package dev.kilua.wizard.utils
 
-import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.ide.fileTemplates.FileTemplateManager
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import org.jetbrains.plugins.gradle.action.GradleExecuteTaskAction
 import dev.kilua.wizard.KiluaModuleBuilder
 import java.io.File
 
@@ -54,7 +51,7 @@ fun File.file(
 private fun getTemplateData(templateName: String, attributes: Map<String, Any> = emptyMap()): String {
     val template = FileTemplateManager
         .getDefaultInstance()
-        .getInternalTemplate(templateName)
+        .getInternalTemplate("kilua_$templateName")
     return if (attributes.isEmpty()) {
         template.text
     } else {
@@ -63,7 +60,7 @@ private fun getTemplateData(templateName: String, attributes: Map<String, Any> =
 }
 
 private fun getBinaryData(templateName: String): ByteArray {
-    KiluaModuleBuilder::class.java.getResourceAsStream("/fileTemplates/internal/$templateName")
+    KiluaModuleBuilder::class.java.getResourceAsStream("/fileTemplates/internal/kilua_$templateName")
         .use { stream ->
             return stream!!.readBytes()
         }
