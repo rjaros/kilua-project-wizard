@@ -19,8 +19,12 @@ ktor = "${ktor_version}"
 #elseif ( ${type} == "micronaut" )
 micronaut = "${micronaut_version}"
 micronaut-plugins = "${micronaut_plugins_version}"
+#elseif ( ${type} == "quarkus" )
+quarkus = "${quarkus_version}"
 #end
+#if ( ${type} != "quarkus" )
 logback = "${logback_version}"
+#end
 #end
 #if ( ${i18n_included} )
 gettext = "${gettext_version}"
@@ -59,8 +63,19 @@ ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor"
 ktor-server-compression = { module = "io.ktor:ktor-server-compression", version.ref = "ktor" }
 #elseif ( ${type} == "micronaut" )
 micronaut-platform = { module = "io.micronaut.platform:micronaut-platform", version.ref = "micronaut" }
+#elseif ( ${type} == "quarkus" )
+quarkus-bom = { module = "io.quarkus.platform:quarkus-bom", version.ref = "quarkus" }
+quarkus-core = { module = "io.quarkus:quarkus-core" }
+quarkus-rest = { module = "io.quarkus:quarkus-rest" }
+quarkus-kotlin = { module = "io.quarkus:quarkus-kotlin" }
+quarkus-rest-kotlin-serialization = { module = "io.quarkus:quarkus-rest-kotlin-serialization" }
+quarkus-config-yaml = { module = "io.quarkus:quarkus-config-yaml" }
+quarkus-arc = { module = "io.quarkus:quarkus-arc" }
+quarkus-vertx-http = { module = "io.quarkus:quarkus-vertx-http" }
 #end
+#if ( ${type} != "quarkus" )
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+#end
 #end
 #foreach( ${module} in ${selected_modules} )
 ${module} = { module = "dev.kilua:${module}", version.ref = "kilua" }
@@ -89,6 +104,8 @@ jooby = { id = "io.jooby.run", version.ref = "jooby" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut-plugins" }
 micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut-plugins" }
+#elseif ( ${type} == "quarkus" )
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 #end
 #if ( ${i18n_included} )
 gettext = { id = "name.kropp.kotlinx-gettext", version.ref = "gettext" }

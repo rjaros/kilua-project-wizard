@@ -17,6 +17,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "${project_name}"
-#if ( (${type} == "spring-boot") || (${type} == "micronaut") )
+#if ( (${type} == "spring-boot") || (${type} == "micronaut") || (${type} == "quarkus") )
 include(":application")
 #end

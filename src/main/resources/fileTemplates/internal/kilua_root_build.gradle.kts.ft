@@ -1,4 +1,4 @@
-#if ( ${jvm_enabled} && ( ${type} != "spring-boot" ) )
+#if ( ${jvm_enabled} && ( ${type} != "spring-boot" ) && ( ${type} != "quarkus" ) )
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 #end
 #if ( ${kwasm_enabled} )
@@ -15,7 +15,7 @@ plugins {
     alias(libs.plugins.kotlin.spring)
 #elseif ( ${type} == "jooby" )
     alias(libs.plugins.jooby)
-#elseif ( ${type} == "micronaut" )
+#elseif ( ${type} == "micronaut" || ${type} == "quarkus" )
     alias(libs.plugins.kotlin.allopen)
 #end
     alias(libs.plugins.compose)
@@ -125,7 +125,7 @@ kotlin {
 #end
     sourceSets {
 #if ( ${jvm_enabled} )
-        val commonMain by getting {
+        getByName("commonMain") {
             dependencies {
 #if ( ${rpc_enabled} )
                 implementation(libs.kilua.rpc)
@@ -134,7 +134,7 @@ kotlin {
 #end
             }
         }
-        val jvmMain by getting {
+        getByName("jvmMain") {
             dependencies {
 #if ( ${ssr_enabled} )
                 implementation(libs.kilua.ssr.server)
@@ -161,19 +161,30 @@ kotlin {
                 implementation("tools.jackson.module:jackson-module-kotlin")
                 implementation("jakarta.validation:jakarta.validation-api")
                 implementation("org.yaml:snakeyaml")
+#elseif ( ${type} == "quarkus" )
+                implementation(kotlin("reflect"))
+                implementation(project.dependencies.platform(libs.quarkus.bom))
+                implementation(libs.quarkus.rest)
+                implementation(libs.quarkus.kotlin)
+                implementation(libs.quarkus.rest.kotlin.serialization)
+                implementation(libs.quarkus.vertx.http)
+                implementation(libs.quarkus.arc)
+                implementation(libs.quarkus.config.yaml)
 #end
+#if ( ${type} != "quarkus" )
                 implementation(libs.logback.classic)
+#end
             }
         }
 #if ( ${test_enabled} )
-        val commonTest by getting {
+        getByName("commonTest") {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        val jvmTest by getting {
+        getByName("jvmTest") {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
@@ -181,7 +192,7 @@ kotlin {
         }
 #end
 #if ( ${kjs_enabled} && ${kwasm_enabled} )
-        val webMain by getting {
+        getByName("webMain") {
             dependencies {
                 implementation(libs.kilua)
 #foreach( ${module} in ${selected_modules_dependencies} )
@@ -193,14 +204,14 @@ kotlin {
             }
         }
 #if ( ${test_enabled} )
-        val webTest by getting {
+        getByName("webTest") {
             dependencies {
                 implementation(libs.kilua.testutils)
             }
         }
 #end
 #elseif ( ${kjs_enabled} )
-        val jsMain by getting {
+        getByName("jsMain") {
             dependencies {
                 implementation(libs.kilua)
 #foreach( ${module} in ${selected_modules_dependencies} )
@@ -212,14 +223,14 @@ kotlin {
             }
         }
 #if ( ${test_enabled} )
-        val jsTest by getting {
+        getByName("jsTest") {
             dependencies {
                 implementation(libs.kilua.testutils)
             }
         }
 #end
 #elseif ( ${kwasm_enabled} )
-        val wasmJsMain by getting {
+        getByName("wasmJsMain") {
             dependencies {
                 implementation(libs.kilua)
 #foreach( ${module} in ${selected_modules_dependencies} )
@@ -231,7 +242,7 @@ kotlin {
             }
         }
 #if ( ${test_enabled} )
-        val wasmJsTest by getting {
+        getByName("wasmJsTest") {
             dependencies {
                 implementation(libs.kilua.testutils)
             }
@@ -240,7 +251,7 @@ kotlin {
 #end
 #else
 #if ( ${kjs_enabled} && ${kwasm_enabled} )
-        val commonMain by getting {
+        getByName("commonMain") {
             dependencies {
                 implementation(libs.kilua)
 #foreach( ${module} in ${selected_modules_dependencies} )
@@ -249,7 +260,7 @@ kotlin {
             }
         }
 #if ( ${test_enabled} )
-        val commonTest by getting {
+        getByName("commonTest") {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
@@ -259,7 +270,7 @@ kotlin {
         }
 #end
 #elseif ( ${kjs_enabled} )
-        val jsMain by getting {
+        getByName("jsMain") {
             dependencies {
                 implementation(libs.kilua)
 #foreach( ${module} in ${selected_modules_dependencies} )
@@ -268,7 +279,7 @@ kotlin {
             }
         }
 #if ( ${test_enabled} )
-        val jsTest by getting {
+        getByName("jsTest") {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
@@ -278,7 +289,7 @@ kotlin {
         }
 #end
 #elseif ( ${kwasm_enabled} )
-        val wasmJsMain by getting {
+        getByName("wasmJsMain") {
             dependencies {
                 implementation(libs.kilua)
 #foreach( ${module} in ${selected_modules_dependencies} )
@@ -287,7 +298,7 @@ kotlin {
             }
         }
 #if ( ${test_enabled} )
-        val wasmJsTest by getting {
+        getByName("wasmJsTest") {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-common"))

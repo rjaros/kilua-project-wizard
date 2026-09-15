@@ -18,6 +18,7 @@ import dev.kilua.wizard.data.VersionApi
 import dev.kilua.wizard.data.model.TemplateJooby
 import dev.kilua.wizard.data.model.TemplateKtor
 import dev.kilua.wizard.data.model.TemplateMicronaut
+import dev.kilua.wizard.data.model.TemplateQuarkus
 import dev.kilua.wizard.data.model.TemplateSpring
 import dev.kilua.wizard.data.model.VersionData
 import dev.kilua.wizard.generator.ProjectTreeGenerator
@@ -140,22 +141,23 @@ class KiluaModuleBuilder : ModuleBuilder() {
             VersionApi.create().getVersionData().blockingGet()
         } catch (_: Exception) {
             VersionData(
-                kilua = "0.0.35",
-                kotlin = "2.4.0",
-                compose = "1.12.0-alpha01",
+                kilua = "0.0.36",
+                kotlin = "2.4.20",
+                compose = "1.13.0-alpha01",
                 coroutines = "1.11.0",
-                ksp = "2.3.9",
-                kiluaRpc = "0.0.45",
-                logback = "1.5.34",
+                ksp = "2.3.12",
+                kiluaRpc = "0.0.46",
+                logback = "1.6.3",
                 gettext = "0.7.0",
                 datetime = "0.8.0",
-                tailwindcss = "4.3.0",
-                viteKotlin = "0.9.0",
+                tailwindcss = "4.3.3",
+                viteKotlin = "0.9.1",
                 ktml = "0.2.3",
-                templateJooby = TemplateJooby("4.5.2"),
-                templateKtor = TemplateKtor(ktor = "3.5.0"),
-                templateMicronaut = TemplateMicronaut(micronaut = "5.0.2", micronautPlugins = "5.0.0"),
-                templateSpring = TemplateSpring(springBoot = "4.1.0"),
+                templateJooby = TemplateJooby("4.5.4"),
+                templateKtor = TemplateKtor(ktor = "3.5.2"),
+                templateMicronaut = TemplateMicronaut(micronaut = "5.1.5", micronautPlugins = "5.0.2"),
+                templateSpring = TemplateSpring(springBoot = "4.1.1"),
+                templateQuarkus = TemplateQuarkus(quarkus = "3.39.3"),
                 modules = emptyList()
             )
         }

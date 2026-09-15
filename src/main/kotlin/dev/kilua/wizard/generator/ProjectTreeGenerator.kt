@@ -26,6 +26,10 @@ class ProjectTreeGenerator {
     )
     private val applicationFiles = listOf("build.gradle.kts")
 
+    private val applicationSourceFiles: Array<String> = arrayOf("Main.kt")
+
+    private val applicationResourcesFiles: Array<String> = arrayOf("application.yml")
+
     private val webpackFiles = listOf(
         "bootstrap.js",
         "file.js",
@@ -132,7 +136,9 @@ class ProjectTreeGenerator {
                         )
                     }
                 }
-                if (projectType == KiluaProjectType.SPRING_BOOT || projectType == KiluaProjectType.MICRONAUT) {
+                if (projectType == KiluaProjectType.SPRING_BOOT || projectType == KiluaProjectType.MICRONAUT ||
+                    projectType == KiluaProjectType.QUARKUS
+                ) {
                     dir("application") {
                         applicationFiles.forEach { fileName ->
                             file(
@@ -140,6 +146,30 @@ class ProjectTreeGenerator {
                                 "jvm_${projectType.code}_application_$fileName",
                                 attrs
                             )
+                        }
+                        if (projectType == KiluaProjectType.QUARKUS) {
+                            dir("src") {
+                                dir("main") {
+                                    dir("kotlin") {
+                                        applicationSourceFiles.forEach { fileName ->
+                                            file(
+                                                fileName,
+                                                "jvm_${projectType.code}_application_source_$fileName",
+                                                attrs
+                                            )
+                                        }
+                                    }
+                                    dir("resources") {
+                                        applicationResourcesFiles.forEach { fileName ->
+                                            file(
+                                                fileName,
+                                                "jvm_${projectType.code}_application_resources_$fileName",
+                                                attrs
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -289,6 +319,10 @@ class ProjectTreeGenerator {
                                             file("Main.kt", "jvm_micronaut_source_Main.kt", attrs)
                                         }
 
+                                        KiluaProjectType.QUARKUS -> {
+                                            file("Application.kt", "jvm_quarkus_source_Application.kt", attrs)
+                                        }
+
                                         KiluaProjectType.VERTX -> {
                                             file("Main.kt", "jvm_vertx_source_Main.kt", attrs)
                                         }
@@ -300,7 +334,9 @@ class ProjectTreeGenerator {
                                 }
                             }
                             dir("resources") {
-                                file("logback.xml", "jvm_resources_logback.xml", attrs)
+                                if (projectType != KiluaProjectType.QUARKUS) {
+                                    file("logback.xml", "jvm_resources_logback.xml", attrs)
+                                }
                                 if (projectType == KiluaProjectType.JAVALIN) {
                                     if (isSsrEnabled) {
                                         file(
@@ -322,6 +358,10 @@ class ProjectTreeGenerator {
                                     file("application.yml", "jvm_spring-boot_resources_application.yml", attrs)
                                 } else if (projectType == KiluaProjectType.MICRONAUT) {
                                     file("application.yml", "jvm_micronaut_resources_application.yml", attrs)
+                                } else if (projectType == KiluaProjectType.QUARKUS) {
+                                    dir("META-INF") {
+                                        file("beans.xml", "jvm_quarkus_resources_meta_beans.xml", attrs)
+                                    }
                                 } else if (projectType == KiluaProjectType.VERTX) {
                                     if (isSsrEnabled) {
                                         file(
@@ -390,6 +430,7 @@ class ProjectTreeGenerator {
             "micronaut_version" to versionData.templateMicronaut.micronaut,
             "micronaut_plugins_version" to versionData.templateMicronaut.micronautPlugins,
             "spring_boot_version" to versionData.templateSpring.springBoot,
+            "quarkus_version" to versionData.templateQuarkus.quarkus,
             "selected_modules" to modules,
             "selected_modules_dependencies" to modules.map { it.replace("-", ".") },
             "selected_initializers" to initializers,

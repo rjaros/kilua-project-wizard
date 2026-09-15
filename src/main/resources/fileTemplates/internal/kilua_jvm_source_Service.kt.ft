@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service
 import io.micronaut.context.annotation.Prototype
 
 @Prototype
+#elseif ( ${type} == "quarkus" )
+import jakarta.enterprise.context.Dependent
+
+@Dependent
 #end
 class PingService : IPingService {
 

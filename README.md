@@ -11,6 +11,7 @@ Supported project types:
 * Fullstack project with Jooby
 * Fullstack project with Micronaut
 * Fullstack project with Vert.x
+* Fullstack project with Quarkus
 
 Supported options:
 
